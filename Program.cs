@@ -40,7 +40,12 @@ app.MapPost("pokedex", async (Pokemon pokemon, IPokedexService pokedexService,
     }
 
     return Results.Created($"/pokedex/{pokemon.Id}", pokemon);
-});
+})
+.WithName("CreatePokemon")
+.Accepts<Pokemon>("application/json")
+.Produces<Pokemon>(201)
+.Produces<IEnumerable<ValidationFailure>>(400)
+.WithTags("Pokedex");
 
 var databaseInitializer = app.Services.GetRequiredService<DatabaseInitializer>();
 await databaseInitializer.InitializeAsync();
