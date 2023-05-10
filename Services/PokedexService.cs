@@ -15,6 +15,12 @@ public class PokedexService : IPokedexService
 
     public async Task<bool> CreateAsync(Pokemon pokemon)
     {
+        var existingPokemon = await GetById(pokemon.Id);
+        if (existingPokemon is not null)
+        {
+            return false;
+        }
+
         using var connection = await _connectionFactory.CreateConnectionAsync();
         var result = await connection.ExecuteAsync(
             @"INSERT INTO Pokemons (Id, Name, Description, Type, HP, Attack, Defense, Speed) 
@@ -23,28 +29,55 @@ public class PokedexService : IPokedexService
         return result > 0;
     }
 
-    public Task<bool> DeleteAsync(int pokemonId)
+    public async Task<bool> DeleteAsync(int pokemonId)
     {
-        throw new NotImplementedException();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
+        var result = await connection.ExecuteAsync(
+            @"DELETE FROM Pokemons WHERE Id = @Id", new { Id = pokemonId });
+        return result > 0;
     }
 
-    public Task<IEnumerable<Pokemon>> GetAllAsync()
+    public async Task<IEnumerable<Pokemon>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
+        return await connection.QueryAsync<Pokemon>(@"SELECT * FROM Pokemons");
     }
 
-    public Task<Pokemon?> GetById(int pokemonId)
+    public async Task<Pokemon?> GetById(int pokemonId)
     {
-        throw new NotImplementedException();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
+        return connection.QuerySingleOrDefault<Pokemon>(
+            @"SELECT * FROM Pokemons WHERE Id = @Id", new { Id = pokemonId});
     }
 
-    public Task<IEnumerable<Pokemon>> SearchByTypeAsync(string type)
+    public async Task<IEnumerable<Pokemon>> SearchByTypeAsync(string type)
     {
-        throw new NotImplementedException();
+        using var connection = await _connectionFactory.CreateConnectionAsync();
+        return await connection.QueryAsync<Pokemon>(
+            @"SELECT * FROM Pokemons WHERE Type = @Type", new { Type = type });
     }
 
-    public Task<bool> UpdateAsync(Pokemon pokemon)
+    public async Task<bool> UpdateAsync(Pokemon pokemon)
     {
-        throw new NotImplementedException();
+        var existingPokemon = await GetById(pokemon.Id);
+        if (existingPokemon is null)
+        {
+            return false;
+        }
+
+        using var connection = await _connectionFactory.CreateConnectionAsync();
+        var result = await connection.ExecuteAsync(
+            @"UPDATE Pokemons 
+            SET Name = @Name,
+                Description = @Description,
+                Type = @Type,
+                HP = @HP,
+                Attack = @Attack,
+                Defense = @Defense,
+                Speed = @Speed
+            WHERE Id = @Id ",
+            pokemon);
+
+        return result > 0;
     }
 }

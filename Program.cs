@@ -1,9 +1,6 @@
 using FluentValidation;
-using FluentValidation.Results;
 using MinimalApi.DemoProject.Data;
 using MinimalApi.DemoProject.Endpoints.Internal;
-using MinimalApi.DemoProject.Models;
-using MinimalApi.DemoProject.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
