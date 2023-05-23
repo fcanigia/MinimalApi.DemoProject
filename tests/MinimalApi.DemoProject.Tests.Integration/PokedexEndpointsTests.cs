@@ -2,8 +2,7 @@
 
 namespace MinimalApi.DemoProject.Tests.Integration;
 
-public class PokedexEndpointsTests : 
-    IClassFixture<PokedexApiFactory>, IAsyncLifetime
+public class PokedexEndpointsTests : IClassFixture<PokedexApiFactory>, IAsyncLifetime
 {
     private readonly PokedexApiFactory _factory;
     private readonly List<int> _createdIds = new();

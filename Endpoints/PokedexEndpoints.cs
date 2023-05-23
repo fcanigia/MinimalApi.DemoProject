@@ -1,10 +1,8 @@
-﻿using FluentValidation.Results;
-using FluentValidation;
+﻿using FluentValidation;
+using FluentValidation.Results;
 using MinimalApi.DemoProject.Endpoints.Internal;
 using MinimalApi.DemoProject.Models;
 using MinimalApi.DemoProject.Services;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 
 namespace MinimalApi.DemoProject.Endpoints;
 
